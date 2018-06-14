@@ -1,0 +1,10 @@
+/* override to tweak the banner */
+.jumbotron {
+    background-color: #FCA205;
+    color: #ffffff;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+
+/* overrides for table */
