@@ -9,7 +9,7 @@ import dateutil.parser
 import os
 import subprocess
 
-from ...models import Binding, MacAddr
+from ...models import Binding, MacAddr, IpAddr, HostName
 
 
 
@@ -64,7 +64,19 @@ class Command(BaseCommand):
             mac_db = MacAddr(mac=mac, vendor=self.get_vendor(mac))
             mac_db.save()
 
-        binding = Binding(mac=mac_db, ip=ip, name=dhcp_name, start=time_val)
+        try:
+            ip_db = IpAddr.objects.get(ip = ip)
+        except IpAddr.DoesNotExist:
+            ip_db = IpAddr(ip=ip)
+            ip_db.save()
+
+        try:
+            host_db = HostName.objects.get(host = dhcp_name)
+        except HostName.DoesNotExist:
+            host_db = HostName(host = dhcp_name)
+            host_db.save()
+
+        binding = Binding(mac=mac_db, ip=ip_db, name=host_db, start=time_val)
         binding.save()
 
 

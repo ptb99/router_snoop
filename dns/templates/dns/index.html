@@ -1,0 +1,45 @@
+<!doctype html>
+{% load staticfiles %}
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DNS Queries</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- local CSS -->
+    <link rel="stylesheet" href="{% static 'css/hosts.css' %}">
+    <!-- Booststrap JS
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    -->
+    
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>DNS Queries</h1>
+      </div>
+
+{% if latest_queries %}
+      <table class="table table-striped">
+        <tr>
+          <th>Time</th>
+          <th>Source</th>
+          <th>DNS query</th>
+        </tr>
+        {% for query in latest_queries %}
+        <tr>
+          <td>{{ query.start }}</td>
+          <td>{{ query.src }}</td>
+          <td>{{ query.host }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+{% else %}
+      <p>No queries available.</p>
+{% endif %}
+    </div>
