@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MAC Addresses</title>
+    <title>DHCP Hostnames</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -21,25 +21,27 @@
   <body>
     <div class="container">
       <div class="jumbotron">
-	<h1>MAC Addresses</h1>
+	<h1>DHCP Hostnames</h1>
       </div>
 
 {% if val_list %}
       <table class="table table-striped">
 	<tr>
-	  <th>IP addr</th>
 	  <th>MAC addr</th>
+	  <th>IP addr</th>
+	  <th>Hostname</th>
 	  <th>MAC vendor</th>
 	</tr>
 	{% for v in val_list %}
 	<tr>
-	  <td>{{ v.ip__ip }}</td>
 	  <td>{{ v.mac__mac }}</td>
+	  <td>{{ v.ip__ip }}</td>
+	  <td>{{ v.name__host }}</td>
 	  <td>{{ v.mac__vendor }}</td>
 	</tr>
 	{% endfor %}
       </table>
 {% else %}
-      <p>No MAC addresses available.</p>
+      <p>No IP addresses available.</p>
 {% endif %}
     </div>

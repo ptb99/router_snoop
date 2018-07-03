@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django.db.models import Max
 
 # Create your views here.
-from .models import Binding, MacAddr, IpAddr, HostName
+from .models import Binding
 
 def index(request):
     latest_bindings = Binding.objects.order_by('-start')[:50]
@@ -17,22 +18,40 @@ def binding(request):
     }
     return render(request, 'hosts/index.html', context)
 
+
 def hostname(request):
-    all_hosts = HostName.objects.order_by('host')
+    binding_list = Binding.objects.values("mac__mac",
+                                          "mac__vendor",
+                                          "name__host",
+                                          "ip__ip").annotate(
+                                              Max("start")).order_by("name__host")
+
     context = {
-        'host_list' : all_hosts
+        'val_list' : binding_list
     }
     return render(request, 'hosts/hostname.html', context)
 
+
 def ip(request):
+    binding_list = Binding.objects.values("mac__mac",
+                                          "mac__vendor",
+                                          "name__host",
+                                          "ip__ip").annotate(
+                                              Max("start")).order_by("ip__ip")
+
     context = {
-        'ipaddr_list' : IpAddr.objects.order_by('ip')
+        'val_list' : binding_list
     }
     return render(request, 'hosts/ip.html', context)
 
 
 def mac(request):
+    binding_list = Binding.objects.values("mac__mac",
+                                          "mac__vendor",
+                                          "ip__ip").annotate(
+                                              Max("start")).order_by("mac__mac")
+    #print("DBG: binding query = ", binding_list.query)
     context = {
-        'mac_list' : MacAddr.objects.order_by('mac')
+        'val_list' : binding_list,
     }
     return render(request, 'hosts/mac.html', context)
