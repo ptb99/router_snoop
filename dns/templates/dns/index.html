@@ -34,8 +34,8 @@
         {% for query in latest_queries %}
         <tr>
           <td>{{ query.start }}</td>
-          <td>{{ query.src }}</td>
-          <td>{{ query.host }}</td>
+          <td><a href="{% url 'ip' query.src %}">{{ query.src }}</a></td>
+          <td><a href="{% url 'query' query.host %}">{{ query.host }}</a></td>
         </tr>
         {% endfor %}
       </table>

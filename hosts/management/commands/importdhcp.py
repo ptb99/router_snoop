@@ -1,5 +1,5 @@
 ##
-## custom manage.py command to parse logfile and load up DB
+## custom manage.py command to parse logfile and load up DHCP DB
 ##
 
 from django.core.management import BaseCommand
@@ -93,4 +93,3 @@ class Command(BaseCommand):
         line = proc.stdout.readline()
         vals = line.decode("utf-8").rstrip().split()
         return ' '.join(vals[3:])
-        
