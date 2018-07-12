@@ -1,22 +1,45 @@
 from django.shortcuts import render
 from django.db.models import Max
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 from .models import Binding
 
-def index(request):
-    latest_bindings = Binding.objects.order_by('-start')[:50]
-    context = {
-        'latest_bindings': latest_bindings,
-    }
-    return render(request, 'hosts/index.html', context)
 
-def binding(request):
-    latest_bindings = Binding.objects.order_by('-start')[:50]
-    context = {
-        'latest_bindings': latest_bindings,
-    }
-    return render(request, 'hosts/index.html', context)
+def index(request):
+    bindings = Binding.objects.order_by('-start')
+    paginator = Paginator(bindings, 25) # 25 items per page
+
+    page = request.GET.get('page')
+    try:
+        latest_bindings = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        latest_bindings = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        latest_bindings = paginator.page(paginator.num_pages)
+
+    return render(request, 'hosts/index.html',
+                  { 'latest_bindings': latest_bindings })
+
+
+def binding(request, mac):
+    bindings = Binding.objects.filter(mac__mac=mac).order_by('-start')
+    paginator = Paginator(bindings, 25) # 25 items per page
+
+    page = request.GET.get('page')
+    try:
+        latest_bindings = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        latest_bindings = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        latest_bindings = paginator.page(paginator.num_pages)
+
+    return render(request, 'hosts/index.html',
+                  { 'latest_bindings': latest_bindings })
 
 
 def hostname(request):
@@ -25,7 +48,6 @@ def hostname(request):
                                           "name__host",
                                           "ip__ip").annotate(
                                               Max("start")).order_by("name__host")
-
     context = {
         'val_list' : binding_list
     }
@@ -38,7 +60,6 @@ def ip(request):
                                           "name__host",
                                           "ip__ip").annotate(
                                               Max("start")).order_by("ip__ip")
-
     context = {
         'val_list' : binding_list
     }

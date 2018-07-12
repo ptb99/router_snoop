@@ -8,3 +8,16 @@
 
 
 /* overrides for table */
+
+
+/* override for paginator under tables */
+.pager {
+    background-color: #FCA205;
+    color: #ffffff;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+/* use this to center the text vertically */
+.pager-center {
+    vertical-align: -6px;
+}

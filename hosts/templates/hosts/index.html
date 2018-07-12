@@ -21,7 +21,7 @@
   <body>
     <div class="container">
       <div class="jumbotron">
-	<h1>Latest DHCP</h1>
+	<h1>Latest DHCP Bindings</h1>
       </div>
 
 {% if latest_bindings %}
@@ -36,13 +36,56 @@
 	{% for binding in latest_bindings %}
 	<tr>
 	  <td>{{ binding.start }}</td>
-	  <td>{{ binding.ip }}</td>
+          <td><a href="{% url 'dns:ip' binding.ip %}">{{ binding.ip }}</a></td>
 	  <td>{{ binding.name }}</td>
-	  <td>{{ binding.mac.mac }}</td>
+          <td><a href="{% url 'hosts:bindings' binding.mac.mac %}">
+	      {{ binding.mac.mac }}</a></td>
 	  <td>{{ binding.mac.vendor }}</td>
 	</tr>
 	{% endfor %}
       </table>
+
+      <ul class="pager">
+	<li class="previous
+		   {% if not latest_bindings.has_previous %}
+		   disabled
+		   {% endif %}
+		  "><a href="?page=1">
+	    <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+	<li class="previous
+		   {% if not latest_bindings.has_previous %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+		   {% if latest_bindings.has_previous %}
+		      ?page={{ latest_bindings.previous_page_number }}
+		   {% else %}
+		      ?page=1
+		   {% endif %}
+		   "><span class="glyphicon glyphicon-backward"></span></a></li>
+
+	<li class="pager-center">Page {{ latest_bindings.number }} of
+	  {{ latest_bindings.paginator.num_pages }}</li>
+
+	<li class="next
+		   {% if not latest_bindings.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="?page={{ latest_bindings.paginator.num_pages }}">
+	    <span class="glyphicon glyphicon-fast-forward"></span></a></li>
+	<li class="next
+		   {% if not latest_bindings.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+		   {% if latest_bindings.has_next %}
+		      ?page={{ latest_bindings.next_page_number }}
+		   {% else %}
+		      ?page={{ latest_bindings.paginator.num_pages }}
+		   {% endif %}
+		   "><span class="glyphicon glyphicon-forward"></span></a></li>
+      </ul>
+
 {% else %}
       <p>No bindings available.</p>
 {% endif %}

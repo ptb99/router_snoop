@@ -34,8 +34,9 @@
 	</tr>
 	{% for v in val_list %}
 	<tr>
-	  <td>{{ v.mac__mac }}</td>
-	  <td>{{ v.ip__ip }}</td>
+          <td><a href="{% url 'hosts:bindings' v.mac__mac %}">
+	      {{ v.mac__mac }}</a></td>
+          <td><a href="{% url 'dns:ip' v.ip__ip %}">{{ v.ip__ip }}</a></td>
 	  <td>{{ v.name__host }}</td>
 	  <td>{{ v.mac__vendor }}</td>
 	</tr>
