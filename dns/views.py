@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count
 
 # Create your views here.
 from .models import DnsQuery
@@ -56,3 +57,12 @@ def by_query(request, host):
 
     return render(request, 'dns/index.html',
                   { 'latest_queries': latest_queries })
+
+
+def ip_summary(request, ip):
+    latest_queries = DnsQuery.objects.filter(src__ip=ip).values(
+        'src__ip', 'host').annotate(
+            num_queries=Count('host')).order_by('-num_queries')
+    #print("DBG: summary query = ", latest_queries.query)
+
+    return render(request, 'dns/summary.html', { 'latest_queries': latest_queries })

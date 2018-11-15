@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from . import views
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^hosts/', include('hosts.urls', namespace='hosts')),
     url(r'^dns/', include('dns.urls', namespace='dns')),
+    url(r'^$', views.index_redirect, name='index'),
 ]

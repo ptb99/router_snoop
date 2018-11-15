@@ -36,7 +36,7 @@
 	{% for binding in latest_bindings %}
 	<tr>
 	  <td>{{ binding.start }}</td>
-          <td><a href="{% url 'dns:ip' binding.ip %}">{{ binding.ip }}</a></td>
+          <td><a href="{% url 'dns:summary' binding.ip %}">{{ binding.ip }}</a></td>
 	  <td>{{ binding.name }}</td>
           <td><a href="{% url 'hosts:bindings' binding.mac.mac %}">
 	      {{ binding.mac.mac }}</a></td>
