@@ -6,41 +6,52 @@ from django.core.management import BaseCommand
 from datetime import datetime
 import dateutil.tz
 import dateutil.parser
+import sys
 
 from ...models import DnsQuery
 from hosts.models import IpAddr
+
+
+### Note: we are parsing syslog lines like this:
+### Aug 22 00:00:48 Buffalo dnsmasq[1409]: 1033786 192.168.1.56/39438 query[A] time.nist.gov from 192.168.1.56
+###
 
 
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
         # Example of named (optional) arguments
-        parser.add_argument('--logfile',
-            action='store_true',
-            dest='logfile',
-            default=False,
-            help='placeholder for possible optional arg')
+        parser.add_argument('--logfile', action='store',
+            help='read from LOGFILE instead of STDIN')
 
 
     def handle(self, *args, **options):
-        filename = 'router-dns.log'
+        # default to read stdin, but use filename if given
         if options['logfile']:
-            print("optional --logfile arg not yet handled")
+            filename = options['logfile']
+            with open(filename, 'r') as fh:
+                self.log_parse(fh)
+        else:
+            fh = sys.stdin
+            self.log_parse(fh)
 
-        self.log_parse(filename)
 
-
-    def log_parse(self, filename):
+    def log_parse(self, fh):
         # reset for use in add_entry():
         self.NOW = None
 
-        with open(filename, 'r') as fh:
-            for line in fh:
+        for line in fh:
+            # check for /dnsmasq/ and /query/
+            if 'dnsmasq' in line:
                 self.add_entry(line)
 
 
     def add_entry(self, line):
         fields = line.split()
+
+        # check for query line
+        if len(fields) < 10 or fields[7][0:5] != 'query':
+            return
 
         srcip = fields[10]
         query = fields[8]

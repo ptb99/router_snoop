@@ -20,7 +20,7 @@ from hosts.models import IpAddr
 
 
 class DnsQuery(models.Model):
-    src = models.ForeignKey(IpAddr)
+    src = models.ForeignKey(IpAddr, on_delete=models.CASCADE)
     host = models.CharField(max_length=128)
     start = models.DateTimeField('DNS query')
 

@@ -7,37 +7,43 @@ from datetime import datetime
 import dateutil.tz
 import dateutil.parser
 import os
+import sys
 import subprocess
 
 from ...models import Binding, MacAddr, IpAddr, HostName
 
+
+### Note: we are parsing syslog lines like this:
+### Aug 19 17:56:35 Buffalo dnsmasq-dhcp[1409]: DHCPACK(br-lan) 192.168.1.57 38:83:9a:50:a9:95 NewCam
+###
 
 
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
         # Example of named (optional) arguments
-        parser.add_argument('--logfile',
-            action='store_true',
-            dest='logfile',
-            default=False,
-            help='placeholder for possible optional arg')
+        parser.add_argument('--logfile', action='store',
+            help='read from LOGFILE instead of STDIN')
 
 
     def handle(self, *args, **options):
-        filename = 'router-dhcp.log'
+        # default to read stdin, but use filename if given
         if options['logfile']:
-            print("optional --logfile arg not yet handled")
+            filename = options['logfile']
+            with open(filename, 'r') as fh:
+                self.log_parse(fh)
+        else:
+            fh = sys.stdin
+            self.log_parse(fh)
 
-        self.log_parse(filename)
 
-
-    def log_parse(self, filename):
+    def log_parse(self, fh):
         # reset for use in add_entry():
         self.NOW = None
 
-        with open(filename, 'r') as fh:
-            for line in fh:
+        for line in fh:
+            # grep /DHCPACK/
+            if 'DHCPACK' in line:
                 self.add_entry(line)
 
 

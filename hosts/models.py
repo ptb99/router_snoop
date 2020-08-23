@@ -25,9 +25,9 @@ class HostName(models.Model):
 
 
 class Binding(models.Model):
-    mac = models.ForeignKey(MacAddr)
-    ip = models.ForeignKey(IpAddr)
-    name = models.ForeignKey(HostName)
+    mac = models.ForeignKey(MacAddr, on_delete=models.CASCADE)
+    ip = models.ForeignKey(IpAddr, on_delete=models.CASCADE)
+    name = models.ForeignKey(HostName, on_delete=models.CASCADE)
     start = models.DateTimeField('DHCP assigned')
 
     def __str__(self):

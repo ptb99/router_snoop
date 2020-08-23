@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+app_name = 'hosts'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^bindings/(?P<mac>[0-9a-f:]+)$', views.binding, name='bindings'),

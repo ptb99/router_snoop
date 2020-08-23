@@ -1,0 +1,5 @@
+.git
+Dockerfile*
+db.sqlite3
+push-files.sh
+*.log
