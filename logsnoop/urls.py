@@ -21,7 +21,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hosts/', include('hosts.urls'), name='hosts'),  #, namespace='hosts'
-    path('dns/', include('dns.urls'), name='dns'),        #, namespace='dns'
+    path('hosts/', include('hosts.urls'), name='hosts'),
+    path('dns/', include('dns.urls'), name='dns'),
+    path('dnspihole/', include('dnspihole.urls'), name='dnspihole'),
     path('', views.index_redirect, name='index'),
 ]

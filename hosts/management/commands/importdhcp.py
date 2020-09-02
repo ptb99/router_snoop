@@ -3,7 +3,7 @@
 ##
 
 from django.core.management import BaseCommand
-from datetime import datetime
+from datetime import datetime,timedelta,timezone
 import dateutil.tz
 import dateutil.parser
 import os
@@ -16,7 +16,6 @@ from ...models import Binding, MacAddr, IpAddr, HostName
 ### Note: we are parsing syslog lines like this:
 ### Aug 19 17:56:35 Buffalo dnsmasq-dhcp[1409]: DHCPACK(br-lan) 192.168.1.57 38:83:9a:50:a9:95 NewCam
 ###
-
 
 class Command(BaseCommand):
 
@@ -37,10 +36,31 @@ class Command(BaseCommand):
             self.log_parse(fh)
 
 
+    def purge_old(self, num_days):
+        cutoff = datetime.today() - timedelta(days=num_days)
+        # Bizarrely, we need to pretend we want midnight in UTC instead of
+        # localtime, since django will try to convert back to UTC when doing
+        # the SQL query.  Basically, Python datetime TZ handling is hopeless...
+        cutoff = cutoff.replace(hour=0, minute=0, second=0,
+                                microsecond=0, tzinfo=timezone.utc)
+        #print("DBG: cutoff = ", cutoff)
+
+        old_entries = Binding.objects.filter(start__lt=cutoff)
+        #print("DBG: purge query = ", old_entries.query)
+        #for e in old_entries:
+        #    print("DBG: to delete ", e.start, e)
+        old_entries.delete()
+
+
     def log_parse(self, fh):
         # reset for use in add_entry():
         self.NOW = None
 
+        # first clean out old data
+        NUMDAYS = 10            # default timeout
+        self.purge_old(NUMDAYS)
+
+        # then import the new data line-by-line
         for line in fh:
             # grep /DHCPACK/
             if 'DHCPACK' in line:

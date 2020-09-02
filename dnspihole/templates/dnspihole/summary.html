@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MAC Addresses</title>
+    <title>DNS Queries</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -15,33 +15,31 @@
     <!-- Booststrap JS
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     -->
-    
   </head>
 
   <body>
     <div class="container">
       <div class="jumbotron">
-	<h1>MAC Addresses</h1>
+        <h1>Summary of DNS Queries</h1>
       </div>
 
-{% if val_list %}
+{% if latest_queries %}
       <table class="table table-striped">
-	<tr>
-	  <th>IP addr</th>
-	  <th>MAC addr</th>
-	  <th>MAC vendor</th>
-	</tr>
-	{% for v in val_list %}
-	<tr>
-          <td><a href="{% url 'dnspihole:summary' v.ip__ip %}">{{ v.ip__ip }}</a></td>
-          <td><a href="{% url 'hosts:bindings' v.mac__mac %}">
-	      {{ v.mac__mac }}</a></td>
-	  <td>{{ v.mac__vendor }}</td>
-	</tr>
-	{% endfor %}
+        <tr>
+          <th>Source</th>
+          <th>DNS query</th>
+          <th>Num instances</th>
+        </tr>
+        {% for query in latest_queries %}
+        <tr>
+          <td><a href="{% url 'dnspihole:ip' query.src %}">{{ query.src }}</a></td>
+          <td><a href="{% url 'dnspihole:query' query.host %}">{{ query.host }}</a></td>
+          <td>{{ query.num_queries }}</td>
+        </tr>
+        {% endfor %}
       </table>
 
 {% else %}
-      <p>No MAC addresses available.</p>
+      <p>No queries available.</p>
 {% endif %}
     </div>

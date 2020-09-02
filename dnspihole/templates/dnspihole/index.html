@@ -1,0 +1,87 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DNS Queries</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- local CSS -->
+    <link rel="stylesheet" href="{% static 'css/hosts.css' %}">
+    <!-- Booststrap JS
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    -->
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>DNS Queries</h1>
+      </div>
+
+{% if latest_queries %}
+      <table class="table table-striped">
+        <tr>
+          <th>Time</th>
+          <th>Source</th>
+          <th>DNS query</th>
+        </tr>
+        {% for query in latest_queries %}
+        <tr>
+          <td>{{ query.start }}</td>
+          <td>{{ query.src }}</td>
+          <td><a href="{% url 'dnspihole:query' query.host %}">{{ query.host }}</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <ul class="pager">
+	<li class="previous
+		   {% if not latest_queries.has_previous %}
+		   disabled
+		   {% endif %}
+		   "><a href="?page=1">
+	    <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+	<li class="previous
+		   {% if not latest_queries.has_previous %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+	           {% if latest_queries.has_previous %}
+		      ?page={{ latest_queries.previous_page_number }}
+		   {% else %}
+		      ?page=1
+		   {% endif %}
+		   "><span class="glyphicon glyphicon-backward"></span></a></li>
+
+	<li class="pager-center">Page {{ latest_queries.number }} of
+	  {{ latest_queries.paginator.num_pages }}</li>
+
+	<li class="next
+		   {% if not latest_queries.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="?page={{ latest_queries.paginator.num_pages }}">
+	    <span class="glyphicon glyphicon-fast-forward"></span></a></li>
+
+	<li class="next
+		   {% if not latest_queries.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+	           {% if latest_queries.has_next %}
+		      ?page={{ latest_queries.next_page_number }}
+		   {% else %}
+		      ?page={{ latest_queries.paginator.num_pages }}
+		   {% endif %}
+                   "><span class="glyphicon glyphicon-forward"></span></a></li>
+      </ul>
+
+{% else %}
+      <p>No queries available.</p>
+{% endif %}
+    </div>

@@ -43,10 +43,15 @@ pip-delete-this-directory.txt
 *.log
 local_settings.py
 db.sqlite3
+*.sqlite3
+*.db
 
 # my work dirs
 old-logs/
 new-logs/
+
+pihole
+test-api.py
 
 # Sphinx documentation
 docs/_build/
