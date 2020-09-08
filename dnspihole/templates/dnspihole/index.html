@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DNS Queries</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -28,13 +29,17 @@
         <tr>
           <th>Time</th>
           <th>Source</th>
+          <th>Query type</th>
           <th>DNS query</th>
+          <th>FTL status</th>
         </tr>
         {% for query in latest_queries %}
         <tr>
           <td>{{ query.start }}</td>
           <td>{{ query.src }}</td>
+          <td>{{ query.querytype }}</td>
           <td><a href="{% url 'dnspihole:query' query.host %}">{{ query.host }}</a></td>
+          <td>{{ query.ftl }}</td>
         </tr>
         {% endfor %}
       </table>

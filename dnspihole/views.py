@@ -15,6 +15,8 @@ def get_pihole_handle():
 
     pihole = ph.PiHole(credentials.name)
     pihole.authenticate(credentials.passwd)
+    #pihole.refresh()
+    #print("DBG: pihole status= ", pihole.status)
     return pihole
 
 
@@ -33,6 +35,8 @@ def convert_response(resp):
         obj.src = i[3]
         obj.ftl = i[4]
         result.append(obj)
+    # the JSON comes in time-order, but we'd like latest first
+    result.reverse()
     return result
 
 
