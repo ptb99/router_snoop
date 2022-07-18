@@ -1,5 +1,5 @@
 FROM python:3
-LABEL version="1.0"
+LABEL version="1.01"
 LABEL description="Basic django container"
 
 RUN apt-get update \

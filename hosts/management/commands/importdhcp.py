@@ -82,7 +82,12 @@ class Command(BaseCommand):
             self.NOW = datetime.now(dateutil.tz.gettz())
 
         time_string = ' '.join(fields[0:3])
+        # use the default=NOW to pull in the local timezone
         time_val = dateutil.parser.parse(time_string, default=self.NOW)
+        # also, handle year change around Dec 31/Jan 1 boundary:
+        if time_val > self.NOW:
+            time_val = time_val.replace(year=(self.NOW.year - 1))
+
 
         try:
             mac_db = MacAddr.objects.get(mac__exact = mac)
