@@ -13,8 +13,10 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY . .
 
+# This is mostly useless, as the volume doesn't persist.
+# Use it to check for runtime errors.  Manually rerun migrate with -v option.
 VOLUME ["/usr/db"]
-RUN ln -s /usr/db/db.sqlite3 && python manage.py migrate
+RUN rm -f db.sqlite3 && ln -s /usr/db/db.sqlite3 && python manage.py migrate
 
 EXPOSE 8000/tcp
 STOPSIGNAL SIGTERM
