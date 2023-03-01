@@ -1,11 +1,11 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 
 from . import views
 
 app_name = 'dns'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^ip/(?P<ip>[0-9\.]+)/$', views.by_ip, name='ip'),
-    url(r'^query/(?P<host>.+)/$', views.by_query, name='query'),
-    url(r'^summary/(?P<ip>[0-9\.]+)/$', views.ip_summary, name='summary'),
+    path('', views.index, name='index'),
+    re_path(r'^ip/(?P<ip>[0-9\.]+)/$', views.by_ip, name='ip'),
+    path('query/<slug:host>/', views.by_query, name='query'),
+    re_path(r'^summary/(?P<ip>[0-9\.]+)/$', views.ip_summary, name='summary'),
 ]
