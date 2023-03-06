@@ -1,48 +1,33 @@
-<!doctype html>
-{% load static %}
+{% extends "hosts/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DHCP Hostnames</title>
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
+{% block title %}DHCP Hostnames{% endblock %}
+{% block heading %}DHCP Hostnames{% endblock %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- local CSS -->
-    <link rel="stylesheet" href="{% static 'css/hosts.css' %}">
-    <!-- Booststrap JS
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    -->
-    
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-	<h1>DHCP Hostnames</h1>
-      </div>
+{% block content %}
 
 {% if val_list %}
       <table class="table table-striped">
-	<tr>
-	  <th>MAC addr</th>
-	  <th>IP addr</th>
-	  <th>Hostname</th>
-	  <th>MAC vendor</th>
-	</tr>
+	<thead><tr>
+	  <th scope="col"><a href="{% url 'hosts:mac' %}">MAC addr</a></th>
+	  <th scope="col"><a href="{% url 'hosts:ip' %}">IP addr</a></th>
+	  <th scope="col">Hostname</th>
+	  <th scope="col">MAC vendor</th>
+	  <th scope="col">Label</th>
+	</tr></thead>
+	<tbody>
 	{% for v in val_list %}
 	<tr>
 	  <td>{{ v.mac__mac }}</td>
 	  <td>{{ v.ip__ip }}</td>
 	  <td>{{ v.name__host }}</td>
 	  <td>{{ v.mac__vendor }}</td>
+	  <td>{{ v.mac__label }}</td>
 	</tr>
 	{% endfor %}
+	</tbody>
       </table>
 {% else %}
       <p>No IP addresses available.</p>
 {% endif %}
-    </div>
+
+{% endblock %}

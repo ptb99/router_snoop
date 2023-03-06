@@ -1,0 +1,108 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item
+	       {% if not current.has_previous %}
+	       disabled
+	       {% endif %}
+	       "><a class="page-link " href="?page=1" aria-label="First">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">First</span>
+    </a></li>
+
+    {% if current.has_previous %}
+    <li class="page-item">
+      <a class="page-link"
+	 href="?page={{ current.previous_page_number }}">
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link " href="?page=1" aria-label="Previous">
+    {% endif %}
+        <span aria-hidden="true">&lt;</span>
+        <span class="sr-only">Previous</span>
+    </a></li>
+
+    {% if current.has_previous %}
+    <li class="page-item">
+      <a class="page-link"
+	 href="?page={{ current.previous_page_number }}">
+	{{ current.previous_page_number }}</a></li>
+    {% endif %}
+
+    <li class="page-item active"><a class="page-link" href="">
+	{{ current.number }}
+	<span class="sr-only">(current)</span></a></li>
+
+    {% if current.has_next %}
+    <li class="page-item">
+      <a class="page-link"
+	 href="?page={{ current.next_page_number }}">
+	{{ current.next_page_number }}</a></li>
+    {% endif %}
+
+    {% if current.has_next %}
+    <li class="page-item">
+      <a class="page-link"
+	 href="?page={{ current.next_page_number }}">
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link " href="?page={{ current.paginator.num_pages }}"
+	 aria-label="Next">
+    {% endif %}
+        <span aria-hidden="true">&gt;</span>
+        <span class="sr-only">Next</span>
+    </a></li>
+
+    <li class="page-item
+	       {% if not current.has_next %}
+	       disabled
+	       {% endif %}
+	       "><a class="page-link" aria-label="Last"
+		    href="?page={{ current.paginator.num_pages }}">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Last</span>
+    </a></li>
+  </ul>
+</nav>
+
+{% comment "old code from Bootstrap v3" %}
+      <ul class="pager">
+	<li class="previous
+		   {% if not latest_bindings.has_previous %}
+		   disabled
+		   {% endif %}
+		  "><a href="?page=1">
+	    <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+`	<li class="previous
+		   {% if not latest_bindings.has_previous %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+		   {% if latest_bindings.has_previous %}
+		      ?page={{ latest_bindings.previous_page_number }}
+		   {% else %}
+		      ?page=1
+		   {% endif %}
+		   "><span class="glyphicon glyphicon-backward"></span></a></li>
+
+	<li class="pager-center">Page {{ latest_bindings.number }} of
+	  {{ latest_bindings.paginator.num_pages }}</li>
+
+	<li class="next
+		   {% if not latest_bindings.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="?page={{ latest_bindings.paginator.num_pages }}">
+	    <span class="glyphicon glyphicon-fast-forward"></span></a></li>
+	<li class="next
+		   {% if not latest_bindings.has_next %}
+		   disabled
+		   {% endif %}
+		   "><a href="
+		   {% if latest_bindings.has_next %}
+		      ?page={{ latest_bindings.next_page_number }}
+		   {% else %}
+		      ?page={{ latest_bindings.paginator.num_pages }}
+		   {% endif %}
+		   "><span class="glyphicon glyphicon-forward"></span></a></li>
+      </ul>
+{% endcomment %}

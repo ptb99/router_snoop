@@ -1,93 +1,45 @@
-<!doctype html>
-{% load static %}
+{% extends "hosts/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DHCP Bindings</title>
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
+{% block title %}DHCP Bindings{% endblock %}
+{% block heading %}Latest DHCP Bindings{% endblock %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- local CSS -->
-    <link rel="stylesheet" href="{% static 'css/hosts.css' %}">
-    <!-- Booststrap JS
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    -->
-    
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-	<h1>Latest DHCP Bindings</h1>
-      </div>
+{% block content %}
 
 {% if latest_bindings %}
+<style>
+  th.limited {
+      width: 30%; /* Keep MAC vendor from taking up too much space */
+  }
+</style>
+
       <table class="table table-striped">
-	<tr>
-	  <th>Time</th>
-	  <th>IP</th>
-	  <th>DHCP name</th>
-	  <th>MAC addr</th>
-	  <th>MAC vendor</th>
-	</tr>
+	<thead><tr>
+	  <th scope="col">Time</th>
+	  <th scope="col"><a href="{% url 'hosts:ip' %}">IP</a></th>
+	  <th scope="col"><a href="{% url 'hosts:hostname' %}">DHCP name</a></th>
+	  <th scope="col"><a href="{% url 'hosts:mac' %}">MAC addr</a></th>
+	  <th scope="col" class="limited">MAC vendor</th>
+	  <th scope="col">Label</th>
+	</tr></thead>
+	<tbody>
 	{% for binding in latest_bindings %}
 	<tr>
 	  <td>{{ binding.start }}</td>
           <td><a href="{% url 'dnspihole:summary' binding.ip %}">{{ binding.ip }}</a></td>
 	  <td>{{ binding.name }}</td>
-          <td><a href="{% url 'hosts:bindings' binding.mac.mac %}">
+          <td><a href="{% url 'hosts:update' binding.mac.mac %}">
 	      {{ binding.mac.mac }}</a></td>
 	  <td>{{ binding.mac.vendor }}</td>
+	  <td>{{ binding.mac.label }}</td>
 	</tr>
 	{% endfor %}
+	</tbody>
       </table>
 
-      <ul class="pager">
-	<li class="previous
-		   {% if not latest_bindings.has_previous %}
-		   disabled
-		   {% endif %}
-		  "><a href="?page=1">
-	    <span class="glyphicon glyphicon-fast-backward"></span></a></li>
-	<li class="previous
-		   {% if not latest_bindings.has_previous %}
-		   disabled
-		   {% endif %}
-		   "><a href="
-		   {% if latest_bindings.has_previous %}
-		      ?page={{ latest_bindings.previous_page_number }}
-		   {% else %}
-		      ?page=1
-		   {% endif %}
-		   "><span class="glyphicon glyphicon-backward"></span></a></li>
-
-	<li class="pager-center">Page {{ latest_bindings.number }} of
-	  {{ latest_bindings.paginator.num_pages }}</li>
-
-	<li class="next
-		   {% if not latest_bindings.has_next %}
-		   disabled
-		   {% endif %}
-		   "><a href="?page={{ latest_bindings.paginator.num_pages }}">
-	    <span class="glyphicon glyphicon-fast-forward"></span></a></li>
-	<li class="next
-		   {% if not latest_bindings.has_next %}
-		   disabled
-		   {% endif %}
-		   "><a href="
-		   {% if latest_bindings.has_next %}
-		      ?page={{ latest_bindings.next_page_number }}
-		   {% else %}
-		      ?page={{ latest_bindings.paginator.num_pages }}
-		   {% endif %}
-		   "><span class="glyphicon glyphicon-forward"></span></a></li>
-      </ul>
+      {% include "hosts/pager_snippet.html" with current=latest_bindings %}
 
 {% else %}
       <p>No bindings available.</p>
 {% endif %}
-    </div>
+
+{% endblock %}

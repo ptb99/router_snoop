@@ -1,28 +1,9 @@
-<!doctype html>
-{% load static %}
+{% extends "hosts/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DNS Queries</title>
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
+{% block title %}DNS Queries{% endblock %}
+{% block heading %}Summary of DNS Queries{% endblock %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- local CSS -->
-    <link rel="stylesheet" href="{% static 'css/hosts.css' %}">
-    <!-- Booststrap JS
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    -->
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Summary of DNS Queries</h1>
-      </div>
+{% block content %}
 
 {% if latest_queries %}
       <table class="table table-striped">
@@ -43,4 +24,5 @@
 {% else %}
       <p>No queries available.</p>
 {% endif %}
-    </div>
+
+{% endblock %}

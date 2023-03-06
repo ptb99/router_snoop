@@ -5,6 +5,7 @@ from django.db import models
 class MacAddr(models.Model):
     mac = models.CharField(max_length=20)
     vendor = models.CharField(max_length=200)
+    label = models.CharField(max_length=100)
 
     def __str__(self):
         return self.mac

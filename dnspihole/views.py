@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+import urllib.parse             # for quote()
 import datetime
 import pihole as ph
 
@@ -121,7 +122,8 @@ def ip_summary(request, ip):
     for x in counts:
         obj = query()
         obj.src = ip
-        obj.host = x[0]
+        # need to escape/protect host against 'http://' chars
+        obj.host = urllib.parse.quote(x[0], safe="")
         obj.num_queries = x[1]
         latest_queries.append(obj)
 
